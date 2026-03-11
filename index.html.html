@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trabalho Prático - Rumo aos 100 Anos</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #111827;
+            --text-muted: #6b7280;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e0e7ff 0%, #ede9fe 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            padding: 40px;
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            color: var(--text-main);
+            font-size: 28px;
+            margin-bottom: 24px;
+            font-weight: 700;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-main);
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+            color: var(--text-main);
+        }
+
+        input:focus {
+            border-color: var(--primary);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        #result-container {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        #result-container.show {
+            display: block;
+        }
+
+        .welcome-msg {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .calculation-msg {
+            font-size: 16px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1 style="color: #4f46e5;">Descubra seu Futuro! 🎈</h1>
+        <p style="color: #6b7280; margin-bottom: 25px; line-height: 1.5;">O grande desafio prático: Descubra quantos anos faltam para você completar 100 anos de vida.</p>
+        
+        <div class="input-group">
+            <label for="nome">Qual é o seu nome?</label>
+            <input type="text" id="nome" placeholder="Ex: Pablo" required>
+        </div>
+
+        <div class="input-group">
+            <label for="idade">Qual é a sua idade?</label>
+            <input type="number" id="idade" placeholder="Ex: 17" min="0" max="150" required>
+        </div>
+
+        <button onclick="calcularIdade()">Ver resultado</button>
+
+        <div id="result-container">
+            <div id="welcome" class="welcome-msg"></div>
+            <div id="calculation" class="calculation-msg"></div>
+        </div>
+    </div>
+
+    <script>
+        function calcularIdade() {
+            const nomeInput = document.getElementById('nome');
+            const idadeInput = document.getElementById('idade');
+            const resultContainer = document.getElementById('result-container');
+            const welcomeMsg = document.getElementById('welcome');
+            const calculationMsg = document.getElementById('calculation');
+
+            const nome = nomeInput.value.trim();
+            const idade = parseInt(idadeInput.value);
+
+            // Mostrar container de aviso
+            resultContainer.classList.add('show');
+            resultContainer.style.backgroundColor = '#f8fafc';
+            resultContainer.style.borderColor = '#e2e8f0';
+
+            // Validação
+            if (!nome) {
+                welcomeMsg.textContent = "⚠️ Atenção";
+                welcomeMsg.style.color = "#dc2626"; // Vermelho
+                calculationMsg.innerHTML = "Por favor, digite o seu nome para continuar.";
+                nomeInput.focus();
+                return;
+            }
+            
+            if (isNaN(idade) || idade < 0 || idade > 150) {
+                welcomeMsg.textContent = "⚠️ Atenção";
+                welcomeMsg.style.color = "#dc2626"; // Vermelho
+                calculationMsg.innerHTML = "Por favor, digite uma idade válida (entre 0 e 150).";
+                idadeInput.focus();
+                return;
+            }
+
+            // Exibir mensagem de boas-vindas
+            welcomeMsg.style.color = "var(--primary)";
+            welcomeMsg.textContent = `Olá, ${nome}! Seja muito bem-vindo(a)! 🌟`;
+
+            // Calcular anos restantes
+            const anosFaltantes = 100 - idade;
+            let mensagemExplicativa = "";
+
+            if (anosFaltantes > 0) {
+                mensagemExplicativa = `Atualmente você tem ${idade} anos. Faltam exatamente <strong>${anosFaltantes} anos</strong> para você alcançar a incrível marca de um século de vida (100 anos). Continue cuidando da sua saúde para aproveitar cada momento dessa jornada!`;
+            } else if (anosFaltantes === 0) {
+                mensagemExplicativa = `Que momento espetacular! Você está completando exatos <strong>100 anos</strong> de vida! Parabéns por sua longa e bela jornada, um século inteiro de histórias e aprendizados! 🎉`;
+            } else {
+                const anosPassaram = Math.abs(anosFaltantes);
+                mensagemExplicativa = `Incrível! Você já viveu um século e mais um pouco. Você tem ${idade} anos, o que significa que já ultrapassou a marca de 100 anos em <strong>${anosPassaram} anos</strong>. Você é uma verdadeira inspiração! 👑`;
+            }
+
+            calculationMsg.innerHTML = mensagemExplicativa;
+
+            // Mostrar container com animação
+            resultContainer.classList.remove('show');
+            // Hack mágico para a animação reiniciar
+            setTimeout(() => {
+                resultContainer.classList.add('show');
+            }, 10);
+        }
+
+        // Permite apertar "Enter" nos campos
+        document.getElementById('idade').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                calcularIdade();
+            }
+        });
+        document.getElementById('nome').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                calcularIdade();
+            }
+        });
+    </script>
+</body>
+</html>
